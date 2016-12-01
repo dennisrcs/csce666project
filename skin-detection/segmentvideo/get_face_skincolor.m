@@ -5,15 +5,15 @@ function skin_centroid = get_face_skincolor(face)
     width = size(face, 1);
     height = size(face, 2);
     img = reshape(face, [width*height, 3]);
-    img_size = size(img, 1);
+    imgSize = size(img, 1);
 
     % k-means
     [clusters, cent] = kmeans(double(img), 3, 'MaxIter', 200);
 
-    new_image = zeros(width*height, 3);
-    % assigning random clusters
-    for i = 1:img_size
-        new_image(i,:) = cent(clusters(i),:);
+    newImage = zeros(width*height, 3);
+    % retrieving segmented face image
+    for i = 1:imgSize
+        newImage(i,:) = cent(clusters(i),:);
     end
 
     % getting the most common color (skin)
