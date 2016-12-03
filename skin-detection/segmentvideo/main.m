@@ -1,6 +1,14 @@
 inputDirPath = 'input_videos/true/';
 outputDirPath = 'output_videos/';
 
+%skinImagesPath = 'E:/csce666project/skin-detection/segmentvideo/skin_images/SKIN/35/';
+%[ cb, cr ] = convert_cb_cr(skinImagesPath);
+
+%means and covariance computed from skin tones dataset
+bmean = 106.39949;
+rmean = 141.2161;
+brcov = [191.2932 131.8422; 131.8422 335.0254];
+
 files = dir(fullfile(inputDirPath, '*.mp4'));
 videoNumber = 1;
 for file = files'
@@ -34,10 +42,11 @@ for file = files'
             % getting face bounding box and writing to txt file
             bbox = step(faceDetector, frame);
             fprintf(fileID, '%d ', size(bbox, 1));
+            fprintf(fileID, '%d ', reshape(bbox',numel(bbox),1));
             fprintf(fileID, '\n');
             % black image
             %segmentedFrame = zeros(size(frame,1), size(frame,2), 3);
-            [~, segmentedFrame] = generate_skinmap(frame);
+            [~, segmentedFrame] = generate_skinmap(frame, bmean, rmean, brcov);
             %erode and dilate image to filter small particles
             se = strel('rectangle',[3 3]);
             segmentedFrame = imerode(segmentedFrame,se);
